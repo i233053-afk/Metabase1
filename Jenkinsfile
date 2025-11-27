@@ -4,26 +4,33 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/i233053-afk/Metabase1.git'
+                checkout scm
             }
         }
 
-        stage('Install Frontend Dependencies') {
+        stage('Set up Java') {
             steps {
-                sh '''
-                    cd frontend
-            npm install --legacy-peer-deps
-                '''
+                // Java 17 setup on Jenkins agent
+                sh 'java -version || sudo apt-get install openjdk-17-jdk -y'
             }
         }
 
-        stage('Build Frontend') {
+        stage('Build') {
             steps {
-                sh '''
-                    cd frontend
-            npm install --legacy-peer-deps
-                '''
+                sh './gradlew build -x test'
             }
+        }
+
+        stage('Test') {
+            steps {
+                sh './gradlew test'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
         }
     }
 }
