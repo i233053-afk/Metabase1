@@ -12,7 +12,7 @@ pipeline {
             steps {
                 sh '''
                     cd frontend
-                    npm install
+            npm install --legacy-peer-deps
                 '''
             }
         }
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh '''
                     cd frontend
-                    npm run build
+            npm install --legacy-peer-deps
                 '''
             }
         }
