@@ -1,22 +1,27 @@
-name: Metabase CI
+name: CI Pipeline
 
 on:
   push:
-    branches: 
-        master 
+    branches: [ master ]
   pull_request:
-    branches:
-        master
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 21
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
-      - name: Build Metabase
-        run: ./gradlew build
+
+      - name: Build Project
+        run: echo "Build steps go here" # Replace with your build commands
+
+      - name: Run Tests
+        run: echo "Test steps go here" # Replace with your test commands
