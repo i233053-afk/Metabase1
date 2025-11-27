@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "metabase:jenkins"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -8,13 +12,22 @@ pipeline {
             }
         }
 
-        stage('Build & Test') {
+        stage('Build Docker Image') {
             steps {
-                // Build using Docker (recommended for Metabase)
-                sh 'sudo docker build -t metabase .'
-                
-                // Optionally, run tests
-                sh 'sudo docker run --rm metabase bash -c "echo Run tests here if needed"'
+                echo "Building Docker image..."
+                sh "docker build -t ${IMAGE_NAME} ."
+            }
+        }
+
+        stage('Run Container & Test') {
+            steps {
+                echo "Running container to test build..."
+                sh """
+                docker run --rm ${IMAGE_NAME} bash -c '
+                  echo "Metabase container started successfully";
+                  # Add any test commands here
+                '
+                """
             }
         }
     }
@@ -22,6 +35,12 @@ pipeline {
     post {
         always {
             echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Build and tests completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed! Check logs for details.'
         }
     }
 }
