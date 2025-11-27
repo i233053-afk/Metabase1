@@ -4,31 +4,43 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/i233053-afk/Metabase1.git'
+                git 'https://github.com/i233053-afk/Metabase1.git'
             }
         }
 
         stage('Install Backend Dependencies') {
             steps {
-                sh 'lein deps'
-            }
-        }
-
-        stage('Install Frontend Dependencies') {
-            steps {
-                sh 'yarn install'
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                sh 'yarn build'
+                sh '''
+                    cd src/metabase
+                    lein deps
+                '''
             }
         }
 
         stage('Build Backend JAR') {
             steps {
-                sh 'lein uberjar'
+                sh '''
+                    cd src/metabase
+                    lein uberjar
+                '''
+            }
+        }
+
+        stage('Install Frontend Dependencies') {
+            steps {
+                sh '''
+                    cd frontend
+                    npm install
+                '''
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                sh '''
+                    cd frontend
+                    npm run build
+                '''
             }
         }
     }
