@@ -11,10 +11,10 @@ pipeline {
         stage('Build & Test') {
             steps {
                 // Build using Docker (recommended for Metabase)
-                sh 'docker build -t metabase .'
+                sh 'sudo docker build -t metabase .'
                 
                 // Optionally, run tests
-                sh 'docker run --rm metabase bash -c "echo Run tests here if needed"'
+                sh 'sudo docker run --rm metabase bash -c "echo Run tests here if needed"'
             }
         }
     }
