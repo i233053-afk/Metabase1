@@ -1,22 +1,34 @@
 pipeline {
     agent any
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                echo 'Building Metabase...'
-                sh './gradlew build' // assuming Metabase uses Gradle
+                git branch: 'master', url: 'https://github.com/i233053-afk/Metabase1.git'
             }
         }
-        stage('Test') {
+
+        stage('Install Backend Dependencies') {
             steps {
-                echo 'Running tests...'
-                sh './gradlew test'
+                sh 'lein deps'
             }
         }
-        stage('Deploy') {
+
+        stage('Install Frontend Dependencies') {
             steps {
-                echo 'Deploying Metabase...'
-                // optional deployment commands
+                sh 'yarn install'
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                sh 'yarn build'
+            }
+        }
+
+        stage('Build Backend JAR') {
+            steps {
+                sh 'lein uberjar'
             }
         }
     }
