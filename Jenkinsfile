@@ -8,24 +8,6 @@ pipeline {
             }
         }
 
-        stage('Install Backend Dependencies') {
-            steps {
-                sh '''
-                    cd src/metabase
-                    lein deps
-                '''
-            }
-        }
-
-        stage('Build Backend JAR') {
-            steps {
-                sh '''
-                    cd src/metabase
-                    lein uberjar
-                '''
-            }
-        }
-
         stage('Install Frontend Dependencies') {
             steps {
                 sh '''
